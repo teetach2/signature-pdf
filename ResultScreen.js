@@ -14,9 +14,11 @@ const ResultScreen = (props) => {
         const keyToFind = key.substring(2, key.length-2);
         if (keyToFind.includes('translate')) {
             const keyToTranslate = keyToFind.replace('|translate', '');
-            return 'translated: ' + valueToReplace[keyToTranslate];
+            const result = valueToReplace[keyToTranslate];
+            return result ? 'translated: ' + valueToReplace[keyToTranslate] : '';
         }
-        return valueToReplace[keyToFind];
+        const result = valueToReplace[keyToFind];
+        return result ? result : '';
 
     }
     
@@ -24,28 +26,16 @@ const ResultScreen = (props) => {
         placeHolder.forEach(element => {
             template = template.replace(element, getValueToReplace(element, valueToReplace));
         });
-        console.log('bbb template=', template);
         return template;
     }
 
+    // placeholder value will be
+    // {{value}} for render a value
+    // {{some.key.to.translate|translate}} to translate
     const getTemplate = (templateType) => {
         if (templateType === 'S') {
-            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>`;
-        } else if (templateType === 'SDCM') {
-            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
-            <hr>
-            <h1>Disclaimer with needed translation</h1>
-            <div>
-            <p>{{dcm1|disclaimer|translate}}</p>
-            <p>{{dcm2|disclaimer|translate}}</p>
-            </div>
-            <hr>
-            <h1>Disclaimer with unneeded translation</h1>
-            <div>
-            <p>{{dcm1|disclaimer}}</p>
-            <p>{{dcm2|disclaimer}}</p>
-            </div>`;
-        } else if (templateType === 'DDCM') {
+            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div><div>this value should left blank: {{blankValue|translate}}</div>`;
+        } else if (templateType === 'DCM') {
             return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
             <hr>
             <h1>Basic Disclaimer</h1>
@@ -56,6 +46,8 @@ const ResultScreen = (props) => {
             <div>
             {{addDCM}}
             </div>`;
+        } else {
+            return 'No template'
         }
     }
 
@@ -82,10 +74,7 @@ const ResultScreen = (props) => {
     });
 
     const createPDF = async() => {
-        // use this value in html if you want to use placeholder
-        // placeholder value will be
-        // {{value}} for render a value
-        // {{some.key.to.translate|translate}} to translate
+        // use html: templateWithPlaceHolder if you want to use placeholder
         const templateWithReplacedValue = getHTMLtoRender();
         const options = {
             html: `<h1>PDF TEST11</h1>
