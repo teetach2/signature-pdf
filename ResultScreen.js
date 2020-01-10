@@ -16,31 +16,57 @@ const ResultScreen = (props) => {
             const keyToTranslate = keyToFind.replace('|translate', '');
             return 'translated: ' + valueToReplace[keyToTranslate];
         }
-        console.log('keyToFind=', keyToFind);
         return valueToReplace[keyToFind];
 
     }
     
     const replaceValue = (template, valueToReplace, placeHolder) => {
         placeHolder.forEach(element => {
-            console.log('bbb element=', element);
-            console.log('bbb element sub=', element.substring(2, element.length-2).replace('|translate', ''))
             template = template.replace(element, getValueToReplace(element, valueToReplace));
         });
         console.log('bbb template=', template);
         return template;
     }
 
+    const getTemplate = (templateType) => {
+        if (templateType === 'S') {
+            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>`;
+        } else if (templateType === 'SDCM') {
+            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
+            <hr>
+            <h1>Disclaimer with needed translation</h1>
+            <div>
+            <p>{{dcm1|disclaimer|translate}}</p>
+            <p>{{dcm2|disclaimer|translate}}</p>
+            </div>
+            <hr>
+            <h1>Disclaimer with unneeded translation</h1>
+            <div>
+            <p>{{dcm1|disclaimer}}</p>
+            <p>{{dcm2|disclaimer}}</p>
+            </div>`;
+        } else if (templateType === 'DDCM') {
+            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
+            <hr>
+            <h1>Basic Disclaimer</h1>
+            <div>
+            {{basicDcm}}
+            <hr>
+            <h1>Additional Disclaimer with unneeded translation</h1>
+            <div>
+            {{addDCM}}
+            </div>`;
+        }
+    }
+
     const getHTMLtoRender = () => {
-        const template = '<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>';
+        const template = getTemplate('S');
         const placeHolders = getPlaceHolders(template);
         const valueToReplace = {
             replacethis: 'Welcome to',
             replacethat: 'translation.key.smth'
         }
-        console.log('bbb placeHolder=', placeHolders);
         const final = replaceValue(template, valueToReplace, placeHolders);
-        console.log('bbb final=', final)
         return final;
     }
 
