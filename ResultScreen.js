@@ -91,9 +91,9 @@ const ResultScreen = (props) => {
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 10}}>
             {/* <Image source={{uri:'file:///' + props.navigation.state.params.imagePath }} style={{width: '100%', height: '100%'}}/> */}
             <Button
-            title="GET PlaceHolder"
+            title="GET raw html to render"
             onPress={() => {
-                getTemplate();
+                getHTMLtoRender();
                 // console.log('props', props);    
             }} />
 
