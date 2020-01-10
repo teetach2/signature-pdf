@@ -5,13 +5,50 @@ import RNFS from 'react-native-fs';
 import Pdf from 'react-native-pdf';
 
 const ResultScreen = (props) => {
+    const basicDiscliamers = [
+        {
+            isChecked: true,
+            translationKey: 'basic.dcm.1'
+        },
+        {
+            isChecked: true,
+            translationKey: 'basic.dcm.2'
+        },
+        {
+            isChecked: true,
+            translationKey: 'basic.dcm.3'
+        },
+        {
+            isChecked: false,
+            translationKey: 'basic.dcm.4'
+        }
+    ];
+
+    const additionalDiscliamers = [
+        {
+            isChecked: false,
+            translationKey: 'additional.dcm.1'
+        },
+        {
+            isChecked: true,
+            translationKey: 'additional.dcm.2'
+        },
+        {
+            isChecked: false,
+            translationKey: 'additional.dcm.3'
+        }
+    ];
+
     const getPlaceHolders = (str) => {
         const regex = /{{\w+(\|translate)?}}/g;
-        const result = str.match(regex);
+        const result = str.match(regex); // [ "{{replacethis}}", "{{replacethat}}" ]
         return result;
     }
     const getValueToReplace = (key, valueToReplace) => {
         const keyToFind = key.substring(2, key.length-2);
+        if (keyToFind.includes('DCM')) {
+            return getDCMHTML(keyToFind);
+        }
         if (keyToFind.includes('translate')) {
             const keyToTranslate = keyToFind.replace('|translate', '');
             const result = valueToReplace[keyToTranslate];
@@ -20,6 +57,24 @@ const ResultScreen = (props) => {
         const result = valueToReplace[keyToFind];
         return result ? result : '';
 
+    }
+    const getDCMHTML = (dcmType) => {
+        let dcmValue = null;
+        if (dcmType === 'basicDCM') {
+            dcmValue = basicDiscliamers;
+        } else if (dcmType === 'addDCM') {
+            dcmValue = additionalDiscliamers;
+        }
+        return dcmValue.map((dcm) => {
+            const { isChecked, translationKey } = dcm;
+            return (`<div style="display: flex;">
+            <div style="flex: 1">${isChecked}
+            </div>
+            <div style="flex: 10">
+            ${translationKey}
+            </div>
+            </div>`);
+        }).join('');
     }
     
     const replaceValue = (template, valueToReplace, placeHolder) => {
@@ -33,26 +88,26 @@ const ResultScreen = (props) => {
     // {{value}} for render a value
     // {{some.key.to.translate|translate}} to translate
     const getTemplate = (templateType) => {
-        if (templateType === 'S') {
+        if (templateType === 'addDCM') {
             return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div><div>this value should left blank: {{blankValue|translate}}</div>`;
         } else if (templateType === 'DCM') {
             return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
             <hr>
             <h1>Basic Disclaimer</h1>
             <div>
-            {{basicDcm}}
+            {{basicDCM}}
             <hr>
-            <h1>Additional Disclaimer with unneeded translation</h1>
+            <h1>Additional Disclaimer</h1>
             <div>
             {{addDCM}}
             </div>`;
         } else {
-            return 'No template'
+            return 'No template';
         }
     }
 
     const getHTMLtoRender = () => {
-        const template = getTemplate('S');
+        const template = getTemplate('DCM');
         const placeHolders = getPlaceHolders(template);
         const valueToReplace = {
             replacethis: 'Welcome to',
@@ -74,7 +129,7 @@ const ResultScreen = (props) => {
     });
 
     const createPDF = async() => {
-        // use html: templateWithPlaceHolder if you want to use placeholder
+        // use html: templateWithReplacedValue if you want to use placeholder
         const templateWithReplacedValue = getHTMLtoRender();
         const options = {
             html: `<h1>PDF TEST11</h1>
