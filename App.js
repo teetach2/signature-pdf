@@ -3,6 +3,7 @@ import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import HomeScreen from "./HomeScreen";
 import SignatureScreen from "./SignatureScreen";
+import ResultScreen from "./ResultScreen";
 
 const AppNavigator = createStackNavigator(
     {
@@ -11,7 +12,7 @@ const AppNavigator = createStackNavigator(
       Result: ResultScreen
     },
     {
-      initialRouteName: 'Home',
+      initialRouteName: 'Result',
     }
 );
 

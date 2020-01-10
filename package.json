@@ -15,6 +15,7 @@
     "react-native": "0.61.5",
     "react-native-fs": "^2.16.2",
     "react-native-gesture-handler": "^1.5.3",
+    "react-native-html-to-pdf": "^0.8.0",
     "react-native-safe-area-context": "^0.6.2",
     "react-native-signature-canvas": "^1.6.0",
     "react-native-webview": "^8.0.2",

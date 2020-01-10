@@ -18,13 +18,15 @@ const SignatureScreen = (props) => {
     const imageBase64Code = img.split("data:image/png;base64,");
     const imagePath = RNFS.DocumentDirectoryPath + '/signature';
     const imageName = imagePath + '/' + Math.random() + '.png';
+    // console.log(props);
+    // props.navigation.push('Result', {imagePath: imageName});
 
     RNFS.exists(imagePath).then(isExist => {
       if (isExist) {
         RNFS.writeFile(imageName, imageBase64Code[1], 'base64')
         .then(() => { 
           setImageState(imageName);
-          props.navigation.push('Signature')
+          props.navigation.push('Result', {imagePath: imageName});
         });
       } else {
         RNFS.mkdir(imagePath)
@@ -32,6 +34,7 @@ const SignatureScreen = (props) => {
               RNFS.writeFile(imageName, imageBase64Code[1], 'base64')
               .then(() => {
                 setImageState(imageName);
+                props.navigation.push('Result', {imagePath: imageName});
               });
             })
             .catch((err) => {
@@ -67,7 +70,6 @@ const SignatureScreen = (props) => {
         // String, webview style for overwrite default style, all style: https://github.com/YanYuanFE/react-native-signature-canvas/blob/master/h5/css/signature-pad.css
         webStyle={`.m-signature-pad--footer
           .button {
-            background-color: red;
             color: #FFF;
           }`}
       />

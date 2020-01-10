@@ -8,7 +8,7 @@ const HomeScreen = (props)  =>{
       <Button
           title="Press me"
           onPress={() => {
-            console.log('this.props', props.navigation.push('Signature'));
+            props.navigation.push('Signature');
           }}
         />
     </View>
