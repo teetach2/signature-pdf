@@ -1,18 +1,19 @@
 import React from 'react';
 import { View, Text, Image, Button } from 'react-native';
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNFS from 'react-native-fs';
 
 const ResultScreen = (props) => {
 
     const createPDF = async() => {
         const options = {
             html: '<h1>PDF TEST</h1>',
-            fileName: 'test',
-            // directory: 'files',
+            fileName: 'test2',
         };
 
-        const file = await RNHTMLtoPDF.convert(options)
-        console.log(file.filePath);
+        const file = await RNHTMLtoPDF.convert(options);
+        const destPath = RNFS.DocumentDirectoryPath + '/signature/' + Math.random() + '.pdf';
+        await RNFS.moveFile(file.filePath, destPath);
     }
 
     return (
