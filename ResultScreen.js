@@ -22,6 +22,8 @@ const ResultScreen = (props) => {
        return {
            replacethis: 'Welcome to',
            replacethat: 'translation.key.smth',
+           vehicle: 'vehicle.type.car',
+           customerName: 'john doe',
            addDCM: [
                 {
                     isChecked: false,

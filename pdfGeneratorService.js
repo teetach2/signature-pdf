@@ -18,6 +18,28 @@ class pdfGeneratorService {
             return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div><div>this value should left blank: {{blankValue|translate}}</div>`;
         } else if (templateType === 'DCM') {
             return `<div>{{logo}}</div>
+            <div style="display: flex">
+                <div style="flex: 1">
+                    <div style="display: flex">
+                        <div style="flex: 1">
+                        Customer Name:
+                        </div>
+                        <div style="flex: 2">
+                        {{customerName}}
+                        </div>
+                    </div>
+                </div>
+                <div style="flex: 1">
+                    <div style="display: flex">
+                        <div style="flex: 1">
+                        Vehicle Type:
+                        </div>
+                        <div style="flex: 2">
+                        {{vehicle|translate}}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
             <hr>
             <h1>Basic Disclaimer</h1>
