@@ -59,9 +59,7 @@ class pdfGeneratorService {
         const keyToFind = placeHolder.substring(2, placeHolder.length-2);
         if (keyToFind.includes('|checkboxAndText')) {
             const checkboxKey = keyToFind.replace('|checkboxAndText', '');
-            console.log('bbb checkboxKey=', checkboxKey);
             const checkboxAndTextValue = valueToReplace[checkboxKey];
-            console.log('checkboxAndTextValue: ', checkboxAndTextValue)
             return this.getCheckboxAndTextHTMLTemplate(checkboxAndTextValue);
         }
         if (keyToFind.includes('translate')) {
@@ -131,7 +129,6 @@ class pdfGeneratorService {
    getHTMLtoRender(valueToReplacePlaceHolder) {
         const template = this.getTemplate('DCM');
         const placeHolders = this.getPlaceHolders(template);
-        console.log('getPlaceHolders=', placeHolders);
         const valueToReplace = valueToReplacePlaceHolder;
         return this.replaceValue(template, valueToReplace, placeHolders);
     }
