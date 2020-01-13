@@ -17,7 +17,8 @@ class pdfGeneratorService {
         if (templateType === 'addDCM') {
             return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div><div>this value should left blank: {{blankValue|translate}}</div>`;
         } else if (templateType === 'DCM') {
-            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
+            return `<div>{{logo}}</div>
+            <h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
             <hr>
             <h1>Basic Disclaimer</h1>
             <div>
@@ -59,6 +60,9 @@ class pdfGeneratorService {
      */
     getValueOfPlaceHolder(placeHolder, valueToReplace) {
         const keyToFind = placeHolder.substring(2, placeHolder.length-2);
+        if (keyToFind.includes('logo')) {
+            return this.getLogo();
+        }
         if (keyToFind.includes('|checkboxAndText')) {
             return this.getCheckboxAndTextValue(keyToFind, valueToReplace);
         }
@@ -94,6 +98,16 @@ class pdfGeneratorService {
         const checkboxKey = keyToFind.replace('|checkboxAndText','').replace('|translate', '');
         const checkboxAndTextValue = valueToReplace[checkboxKey];
         return this.getCheckboxAndTextHTMLTemplate(checkboxAndTextValue, needTranslation);
+    }
+
+    /**
+     * get logo to attach in pdf
+     * 
+     * @return html of logo image
+     */
+    getLogo() {
+        const logoPath = 'path/to/logo';
+        return `<div>${logoPath}</div>`;
     }
 
     /**
