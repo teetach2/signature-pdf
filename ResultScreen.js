@@ -24,6 +24,16 @@ const ResultScreen = (props) => {
            replacethat: 'translation.key.smth',
            vehicle: 'vehicle.type.car',
            customerName: 'john doe',
+           damageDescription: [
+                {
+                    topic: 'topic1',
+                    imagePath: 'path/to/img/1'
+                },
+                {
+                    topic: 'topic2',
+                    imagePath: 'path/to/img/1'
+                }
+           ],
            addDCM: [
                 {
                     isChecked: false,

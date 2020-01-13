@@ -1,6 +1,6 @@
 class pdfGeneratorService {
 
-    placeHolderPattern = /{{\w+(\|checkboxAndText)?(\|translate)?}}/g;
+    placeHolderPattern = /{{\w+(\|topicAndImage)?(\|checkboxAndText)?(\|translate)?}}/g;
 
     /** 
      * for getting template
@@ -49,6 +49,9 @@ class pdfGeneratorService {
             <h1>Additional Disclaimer</h1>
             <div>
             {{addDCM|checkboxAndText}}
+            </div>
+            <div>
+            {{damageDescription|topicAndImage|translate}}
             </div>`;
         } else if (templateType === 'withPhotos') {
             return `<h1>PDF TEST11</h1>
@@ -88,6 +91,9 @@ class pdfGeneratorService {
         if (keyToFind.includes('|checkboxAndText')) {
             return this.getCheckboxAndTextValue(keyToFind, valueToReplace);
         }
+        if (keyToFind.includes('|topicAndImage')) {
+            return this.getTopicAndImage(keyToFind, valueToReplace);
+        }
         if (keyToFind.includes('|translate')) {
             return this.getTranslatedValue(keyToFind, valueToReplace);
         }
@@ -97,12 +103,15 @@ class pdfGeneratorService {
 
     /**
      * get translated value of a placeHolder with pipe `|translate` from valueToReplace
-     * @param placeHolder {{placeHolder|translate}} from HTML template
+     * @param placeHolder placeHolder|translate from HTML template
      * @param valueToReplace Object of field and value to replace in placeHolder ex. { field: value }
      * 
      * @return value of a placeholder (with or without translation)
      */
     getTranslatedValue(keyToFind, valueToReplace) {
+        if (!keyToFind.includes('|translate')) {
+            return;
+        }
         const keyToTranslate = keyToFind.replace('|translate', '');
         const result = valueToReplace[keyToTranslate];
         return result ? 'translated: ' + valueToReplace[keyToTranslate] : '';
@@ -116,6 +125,9 @@ class pdfGeneratorService {
      * @return value of a placeholder (with or without translation)
      */
     getCheckboxAndTextValue(keyToFind, valueToReplace) {
+        if (!keyToFind.includes('|checkboxAndText')) {
+            return;
+        }
         const needTranslation = keyToFind.includes('|translate');
         const checkboxKey = keyToFind.replace('|checkboxAndText','').replace('|translate', '');
         const checkboxAndTextValue = valueToReplace[checkboxKey];
@@ -130,6 +142,27 @@ class pdfGeneratorService {
     getLogo() {
         const logoPath = 'path/to/logo';
         return `<div>${logoPath}</div>`;
+    }
+
+    /**
+     * get topic and image html
+     * 
+     * @return html of logo image
+     */
+    getTopicAndImage(keyToFind, valueToReplace) {
+        if (!keyToFind.includes('|topicAndImage')) {
+            return;
+        }
+        const key = keyToFind.replace('|topicAndImage', '');
+        const needTranslation = key.includes('|translate');
+        const keyToFindTopicAndImage = key.replace('|translate', '');
+        const topicAndImages = valueToReplace[keyToFindTopicAndImage];
+        return topicAndImages.map((item) => {
+            return `<div>
+            <h2>${needTranslation ? 'translated: ' + item.topic : item.topic}</h2>
+            <div>${item.imagePath}</div>
+            </div>`
+        }).join('');
     }
 
     /**
