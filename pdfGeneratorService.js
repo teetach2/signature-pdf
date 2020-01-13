@@ -1,5 +1,7 @@
 class pdfGeneratorService {
 
+    placeHolderPattern = /{{\w+(\|checkboxAndText)?(\|translate)?}}/g;
+
     /** 
      * for getting template
      * currently it returns dummy template
@@ -78,8 +80,7 @@ class pdfGeneratorService {
      * @return array of placeolhders ex. [ "{{replacethis}}", "{{replacethat}}" ]
      */
     getPlaceHolders(template) {
-        const regex = /{{\w+(\|checkboxAndText)?(\|translate)?}}/g;
-        return template.match(regex);
+        return template.match(this.placeHolderPattern);
     }
 
     /**
