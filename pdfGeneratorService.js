@@ -130,8 +130,7 @@ class pdfGeneratorService {
    getHTMLtoRender(valueToReplacePlaceHolder) {
         const template = this.getTemplate('DCM');
         const placeHolders = this.getPlaceHolders(template);
-        const valueToReplace = valueToReplacePlaceHolder;
-        return this.replaceValue(template, valueToReplace, placeHolders);
+        return this.replaceValue(template, valueToReplacePlaceHolder, placeHolders);
     }
 
 }
