@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
-import Signature from 'react-native-signature-canvas';
+// import Signature from 'react-native-signature-canvas';
 import RNFS from 'react-native-fs';
+import SignatureComponent from './signature/signatureComponent';
 
 const SignatureScreen = (props) => {
     // _signaturePadError = error => {
@@ -57,12 +58,10 @@ const SignatureScreen = (props) => {
       {/* <View style={{flex: 1}} >
         <Image source={{uri:'file:///' + imageState }} style={{width: 300, height: 300}}/>
       </View> */}
-      <Signature
+      <SignatureComponent
         // handle when you click save button
         onOK={(img) => handleSaveAction(img)}
-        onEmpty={() => alert('askdjlkd')}
-        // description text for signature
-        descriptionText="Signature"
+        onEmpty={() => alert('Empty sus!')}
         // clear button text
         clearText="Clear"
         // save button text
