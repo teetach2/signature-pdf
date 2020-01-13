@@ -60,17 +60,40 @@ class pdfGeneratorService {
     getValueOfPlaceHolder(placeHolder, valueToReplace) {
         const keyToFind = placeHolder.substring(2, placeHolder.length-2);
         if (keyToFind.includes('|checkboxAndText')) {
-            const checkboxKey = keyToFind.replace('|checkboxAndText', '');
-            const checkboxAndTextValue = valueToReplace[checkboxKey];
-            return this.getCheckboxAndTextHTMLTemplate(checkboxAndTextValue);
+            return this.getCheckboxAndTextValue(keyToFind, valueToReplace);
         }
-        if (keyToFind.includes('translate')) {
-            const keyToTranslate = keyToFind.replace('|translate', '');
-            const result = valueToReplace[keyToTranslate];
-            return result ? 'translated: ' + valueToReplace[keyToTranslate] : '';
+        if (keyToFind.includes('|translate')) {
+            return this.getTranslatedValue(keyToFind, valueToReplace);
         }
         const result = valueToReplace[keyToFind];
         return result ? result : '';
+    }
+
+    /**
+     * get translated value of a placeHolder with pipe `|translate` from valueToReplace
+     * @param placeHolder {{placeHolder|translate}} from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder ex. { field: value }
+     * 
+     * @return value of a placeholder (with or without translation)
+     */
+    getTranslatedValue(keyToFind, valueToReplace) {
+        const keyToTranslate = keyToFind.replace('|translate', '');
+        const result = valueToReplace[keyToTranslate];
+        return result ? 'translated: ' + valueToReplace[keyToTranslate] : '';
+    }
+
+    /**
+     * get checkbox and text value of a placeHolder with pipe `|checkboxAndText` from valueToReplace
+     * @param placeHolder {{placeHolder|checkboxAndText}} from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder ex. { field: [ { isChecked: true, text: value } ] }
+     * 
+     * @return value of a placeholder (with or without translation)
+     */
+    getCheckboxAndTextValue(keyToFind, valueToReplace) {
+        const needTranslation = keyToFind.includes('|translate');
+        const checkboxKey = keyToFind.replace('|checkboxAndText','').replace('|translate', '');
+        const checkboxAndTextValue = valueToReplace[checkboxKey];
+        return this.getCheckboxAndTextHTMLTemplate(checkboxAndTextValue, needTranslation);
     }
 
     /**
@@ -94,10 +117,10 @@ class pdfGeneratorService {
      * 
      * @return a HTML string of checkbox and text for each object in textList
      */
-    getCheckboxAndTextHTMLTemplate(textList) {
+    getCheckboxAndTextHTMLTemplate(textList, needTranslation) {
         return textList.map((dcm) => {
             const { isChecked, text } = dcm;
-            const textToRender = text.includes('|translate') ? `translated: ${text}` : text;
+            const textToRender = needTranslation ? `translated: ${text}` : text;
             return (`<div style="display: flex;">
             <div style="flex: 1">${isChecked}
             </div>
