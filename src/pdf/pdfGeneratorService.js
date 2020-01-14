@@ -1,6 +1,13 @@
 class pdfGeneratorService {
 
-    placeHolderPattern = /{{\w+(\|topicAndImage)?(\|checkboxAndText)?(\|translate)?}}/g;
+    placeHolderPattern = /{{\w+(\|indicateServerity)?(\|topicAndImage)?(\|checkboxAndText)?(\|translate)?}}/g;
+
+    severityLevel = {
+        HIGH: { text: 'HIGH', color: 'red' },
+        MEDIUM: { text: 'MEDIUM', color: 'orange' },
+        LOW: { text: 'LOW', color: 'green' },
+        NO_DAMAGE: { text: 'NO DAMAGE', color: 'grey' }
+    }
 
     /** 
      * for getting template
@@ -51,8 +58,17 @@ class pdfGeneratorService {
             {{addDCM|checkboxAndText}}
             </div>
             <div>
-            {{damageDescription|topicAndImage|translate}}
-            </div>`;
+            {{damagePhotos|topicAndImage|translate}}
+            </div>
+            <div>
+                <h1>Severity</h1>
+                <div>1. severity: {{severity1|indicateServerity}}</div>
+                <div>2. severity: {{severity2|indicateServerity}}</div>
+                <div>3. severity: {{severity3|indicateServerity}}</div>
+                <div>4. severity: {{severity4|indicateServerity}}</div>
+                <div>5. severity: {{severity5|indicateServerity}}</div>
+            </div>
+            `;
         } else if (templateType === 'withPhotos') {
             return `<h1>PDF TEST11</h1>
             <br>
@@ -93,6 +109,9 @@ class pdfGeneratorService {
         }
         if (keyToFind.includes('|topicAndImage')) {
             return this.getTopicAndImage(keyToFind, valueToReplace);
+        }
+        if (keyToFind.includes('|indicateServerity')) {
+            return this.indicateServerity(keyToFind, valueToReplace);
         }
         if (keyToFind.includes('|translate')) {
             return this.getTranslatedValue(keyToFind, valueToReplace);
@@ -158,11 +177,42 @@ class pdfGeneratorService {
         const keyToFindTopicAndImage = key.replace('|translate', '');
         const topicAndImages = valueToReplace[keyToFindTopicAndImage];
         return topicAndImages.map((item) => {
+            const { topic, imagePath, comment } = item;
             return `<div>
-            <h2>${needTranslation ? 'translated: ' + item.topic : item.topic}</h2>
-            <div>${item.imagePath}</div>
+            <h2>${needTranslation ? 'translated: ' + topic : topic}</h2>
+            <div>${imagePath}</div>
+            ${comment ? `<div>Comment: ${comment}</div>`: ``}
             </div>`
         }).join('');
+    }
+
+    /**
+     * get text with severity color
+     * RED - HIGH
+     * ORANGE - MEDIUM
+     * GREEN - LOW
+     * GRAY - NO DAMAGE
+     * 
+     * @return html of text with severity color
+     */
+    indicateServerity(keyToFind, valueToReplace) {
+        if (!keyToFind.includes('|indicateServerity')) {
+            return;
+        }
+        const key = keyToFind.replace('|indicateServerity', '');
+        const needTranslation = key.includes('|translate');
+        const keyToFindText = key.replace('|translate', '');
+        const value = valueToReplace[keyToFindText];
+        if (!value) {
+            return '';
+        }
+        const { severity, repairable } = value;
+        const severityToFind = severity.replace(' ', '_');
+        const colorCss = this.severityLevel[severityToFind] ? this.severityLevel[severityToFind].color : 'black';
+        const severityText = this.severityLevel[severityToFind] ? this.severityLevel[severityToFind].text : '';
+        return `<div style="color: ${colorCss}">
+            ${needTranslation ? 'translated: ' + severityText : severityText} ${repairable ? `- ${repairable}` : ''}
+            </div>`;
     }
 
     /**
