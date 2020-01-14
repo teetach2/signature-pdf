@@ -9,14 +9,14 @@ class pdfGeneratorService {
         LOGO: 'logo'
     }
 
-    placeHolderPattern = /{{\w+(\|logo)?(\|imageGrid)?(\|indicateServerity)?(\|singleImage)?(\|checkboxAndText)?(\|translate)?}}/g;
-
     severityLevel = {
         HIGH: { text: 'HIGH', color: 'red' },
         MEDIUM: { text: 'MEDIUM', color: 'orange' },
         LOW: { text: 'LOW', color: 'green' },
         NO_DAMAGE: { text: 'NO DAMAGE', color: 'grey' }
     }
+
+    placeHolderPattern = /{{\w+(\|logo)?(\|imageGrid)?(\|indicateServerity)?(\|singleImage)?(\|checkboxAndText)?(\|translate)?}}/g;
 
     /** 
      * for getting template
