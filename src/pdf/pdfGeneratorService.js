@@ -1,6 +1,13 @@
 class pdfGeneratorService {
 
-    placeHolderPattern = /{{\w+(\|indicateServerity)?(\|topicAndImage)?(\|checkboxAndText)?(\|translate)?}}/g;
+    pipes = {
+        TOPIC_AND_IMAGE_GRID: '|imageGrid',
+        TOPIC_AND_SINGLE_IMAGE: '|singleImage',
+        INDICATE_SEVERITY: '|indicateServerity',
+        CHECKBOX_AND_TEXT: '|checkboxAndText',
+        TRANSLATE: '|translate',
+        LOGO: 'logo'
+    }
 
     severityLevel = {
         HIGH: { text: 'HIGH', color: 'red' },
@@ -8,6 +15,8 @@ class pdfGeneratorService {
         LOW: { text: 'LOW', color: 'green' },
         NO_DAMAGE: { text: 'NO DAMAGE', color: 'grey' }
     }
+
+    placeHolderPattern = /{{\w+(\|logo)?(\|imageGrid)?(\|indicateServerity)?(\|singleImage)?(\|checkboxAndText)?(\|translate)?}}/g;
 
     /** 
      * for getting template
@@ -21,9 +30,7 @@ class pdfGeneratorService {
      * @return html template
      * **/
     getTemplate(templateType) {
-        if (templateType === 'addDCM') {
-            return `<h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div><div>this value should left blank: {{blankValue|translate}}</div>`;
-        } else if (templateType === 'DCM') {
+        if (templateType === 'DCM') {
             return `<div>{{logo}}</div>
             <div style="display: flex">
                 <div style="flex: 1">
@@ -58,7 +65,7 @@ class pdfGeneratorService {
             {{addDCM|checkboxAndText}}
             </div>
             <div>
-            {{damagePhotos|topicAndImage|translate}}
+            {{damagePhotos|singleImage|translate}}
             </div>
             <div>
                 <h1>Severity</h1>
@@ -67,6 +74,9 @@ class pdfGeneratorService {
                 <div>3. severity: {{severity3|indicateServerity}}</div>
                 <div>4. severity: {{severity4|indicateServerity}}</div>
                 <div>5. severity: {{severity5|indicateServerity}}</div>
+            </div>
+            <div>
+            {{additionalPhoto|imageGrid}}
             </div>
             `;
         } else if (templateType === 'withPhotos') {
@@ -101,19 +111,22 @@ class pdfGeneratorService {
      */
     getValueOfPlaceHolder(placeHolder, valueToReplace) {
         const keyToFind = placeHolder.substring(2, placeHolder.length-2);
-        if (keyToFind.includes('logo')) {
+        if (keyToFind.includes(this.pipes.LOGO)) {
             return this.getLogo();
         }
-        if (keyToFind.includes('|checkboxAndText')) {
+        if (keyToFind.includes(this.pipes.CHECKBOX_AND_TEXT)) {
             return this.getCheckboxAndTextValue(keyToFind, valueToReplace);
         }
-        if (keyToFind.includes('|topicAndImage')) {
-            return this.getTopicAndImage(keyToFind, valueToReplace);
+        if (keyToFind.includes(this.pipes.TOPIC_AND_SINGLE_IMAGE)) {
+            return this.getSingleImage(keyToFind, valueToReplace);
         }
-        if (keyToFind.includes('|indicateServerity')) {
+        if (keyToFind.includes(this.pipes.TOPIC_AND_IMAGE_GRID)) {
+            return this.getImageGrid(keyToFind, valueToReplace);
+        }
+        if (keyToFind.includes(this.pipes.INDICATE_SEVERITY)) {
             return this.indicateServerity(keyToFind, valueToReplace);
         }
-        if (keyToFind.includes('|translate')) {
+        if (keyToFind.includes(this.pipes.TRANSLATE)) {
             return this.getTranslatedValue(keyToFind, valueToReplace);
         }
         const result = valueToReplace[keyToFind];
@@ -128,33 +141,50 @@ class pdfGeneratorService {
      * @return value of a placeholder (with or without translation)
      */
     getTranslatedValue(keyToFind, valueToReplace) {
-        if (!keyToFind.includes('|translate')) {
+        if (!keyToFind.includes(this.pipes.TRANSLATE)) {
             return;
         }
-        const keyToTranslate = keyToFind.replace('|translate', '');
+        const keyToTranslate = keyToFind.replace(this.pipes.TRANSLATE, '');
         const result = valueToReplace[keyToTranslate];
         return result ? 'translated: ' + valueToReplace[keyToTranslate] : '';
     }
 
     /**
-     * get checkbox and text value of a placeHolder with pipe `|checkboxAndText` from valueToReplace
-     * @param placeHolder {{placeHolder|checkboxAndText}} from HTML template
-     * @param valueToReplace Object of field and value to replace in placeHolder ex. { field: [ { isChecked: true, text: value } ] }
+     * render checkbox and text in one line
      * 
-     * @return value of a placeholder (with or without translation)
+     * @param textList list of text that will be rendered with checkbox and text
+     * [
+     *  { isChecked: false, text: 'translatin.key.1' }, // render with uncheck checkbox and translated value
+     *  { isChecked: true, text: 'translatin.key.2' }, // render with uncheck checkbox and translated value
+     * ]
+     * 
+     * @return a HTML string of checkbox and text for each object in textList
      */
     getCheckboxAndTextValue(keyToFind, valueToReplace) {
-        if (!keyToFind.includes('|checkboxAndText')) {
+        if (!keyToFind.includes(this.pipes.CHECKBOX_AND_TEXT)) {
             return;
         }
-        const needTranslation = keyToFind.includes('|translate');
-        const checkboxKey = keyToFind.replace('|checkboxAndText','').replace('|translate', '');
+        const needTranslation = keyToFind.includes(this.pipes.TRANSLATE);
+        const checkboxKey = keyToFind.replace(this.pipes.CHECKBOX_AND_TEXT,'').replace(this.pipes.TRANSLATE, '');
         const checkboxAndTextValue = valueToReplace[checkboxKey];
-        return this.getCheckboxAndTextHTMLTemplate(checkboxAndTextValue, needTranslation);
+        return checkboxAndTextValue.map((dcm) => {
+            const { isChecked, text } = dcm;
+            const textToRender = needTranslation ? `translated: ${text}` : text;
+            return (`<div style="display: flex;">
+            <div style="flex: 1">${isChecked}
+            </div>
+            <div style="flex: 10">
+            ${textToRender}
+            </div>
+            </div>`);
+        }).join('');;
     }
 
     /**
      * get logo to attach in pdf
+     * @param placeHolder logo from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder 
+     * ex. { logo: 'path/to/logo.jpg' }
      * 
      * @return html of logo image
      */
@@ -164,26 +194,82 @@ class pdfGeneratorService {
     }
 
     /**
-     * get topic and image html
+     * get topic and single image html
+     * @param placeHolder placeHolder|singleImage from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder 
+     * ex. { damagePhotos: [
+                {
+                    topic: 'topic1',
+                    imagePath: 'path/to/img/1',
+                    comment: 'comment jaaaaaa'
+                }
+            }
      * 
-     * @return html of logo image
+     * @return html of single image with topic and comment
      */
-    getTopicAndImage(keyToFind, valueToReplace) {
-        if (!keyToFind.includes('|topicAndImage')) {
+    getSingleImage(keyToFind, valueToReplace) {
+        if (!keyToFind.includes(this.pipes.TOPIC_AND_SINGLE_IMAGE)) {
             return;
         }
-        const key = keyToFind.replace('|topicAndImage', '');
-        const needTranslation = key.includes('|translate');
-        const keyToFindTopicAndImage = key.replace('|translate', '');
+        const key = keyToFind.replace(this.pipes.TOPIC_AND_SINGLE_IMAGE, '');
+        const needTranslation = key.includes(this.pipes.TRANSLATE);
+        const keyToFindTopicAndImage = key.replace(this.pipes.TRANSLATE, '');
         const topicAndImages = valueToReplace[keyToFindTopicAndImage];
         return topicAndImages.map((item) => {
             const { topic, imagePath, comment } = item;
             return `<div>
-            <h2>${needTranslation ? 'translated: ' + topic : topic}</h2>
-            <div>${imagePath}</div>
+            ${topic ? `<h2>${needTranslation ? 'translated: ' + topic : topic}</h2>` : ''}
+            ${imagePath? `<div>${imagePath}</div>` : ''}
             ${comment ? `<div>Comment: ${comment}</div>`: ``}
             </div>`
         }).join('');
+    }
+    
+    /**
+     * get topic and image grid html
+     * @param placeHolder placeHolder|imageGrid from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder 
+     * ex. { photoGrid: {
+                topic: 'Photos',
+                imagePaths: [
+                    'path/to/img/1',
+                    'path/to/img/2',
+                    'path/to/img/3',
+                ],
+                comment: "Some Comment"
+            }
+        }
+     * 
+     * @return html of image grid with topic and comment
+     */
+    getImageGrid(keyToFind, valueToReplace) {
+        if (!keyToFind.includes(this.pipes.TOPIC_AND_IMAGE_GRID)) {
+            return;
+        }
+        const key = keyToFind.replace(this.pipes.TOPIC_AND_IMAGE_GRID, '');
+        const needTranslation = key.includes(this.pipes.TRANSLATE);
+        const keyToFindTopicAndImages = key.replace(this.pipes.TRANSLATE, '');
+        const topicAndImages = valueToReplace[keyToFindTopicAndImages];
+        const { topic, imagePaths, comment } = topicAndImages;
+        return (`<div>
+            ${topic ? `<h2>${needTranslation ? 'translated: ' + topic : topic}</h2>` : ''}
+            ${imagePaths && imagePaths.length > 0 ? 
+                `${imagePaths.map((item, key) => {
+                    let result = '';
+                    if ((key+1) % 3 === 1) {
+                        result = result.concat('<div style="display: flex">');
+                    }
+                    
+                    result = result.concat(`<div style="flex: 1; border: 1px solid #111; padding-bottom: 10px; padding-right: 10px;">${item}</div>`);
+    
+                    if ((key+1) % 3 === 0 || key === (imagePaths.length-1)) {
+                        result = result.concat('</div>');
+                    }
+                    return result;
+                }).join('')}` : ''}
+            
+            ${comment ? `<div>Comment: ${comment}</div>`: ``}
+            </div>`);
     }
 
     /**
@@ -192,16 +278,23 @@ class pdfGeneratorService {
      * ORANGE - MEDIUM
      * GREEN - LOW
      * GRAY - NO DAMAGE
+     * @param placeHolder placeHolder|checkboxAndText from HTML template
+     * @param valueToReplace Object of field and value to replace in placeHolder 
+     * ex. { severity1: {
+                severity: pdfGeneratorService.severityLevel.HIGH.text,
+                repairable: 'R'
+            } 
+        }
      * 
      * @return html of text with severity color
      */
     indicateServerity(keyToFind, valueToReplace) {
-        if (!keyToFind.includes('|indicateServerity')) {
+        if (!keyToFind.includes(this.pipes.INDICATE_SEVERITY)) {
             return;
         }
-        const key = keyToFind.replace('|indicateServerity', '');
-        const needTranslation = key.includes('|translate');
-        const keyToFindText = key.replace('|translate', '');
+        const key = keyToFind.replace(this.pipes.INDICATE_SEVERITY, '');
+        const needTranslation = key.includes(this.pipes.TRANSLATE);
+        const keyToFindText = key.replace(this.pipes.TRANSLATE, '');
         const value = valueToReplace[keyToFindText];
         if (!value) {
             return '';
@@ -225,35 +318,10 @@ class pdfGeneratorService {
         return template.match(this.placeHolderPattern);
     }
 
-    /**
-     * render checkbox and text in one line
-     * 
-     * @param textList list of text that will be rendered with checkbox and text
-     * [
-     *  { isChecked: false, text: 'translatin.key.1' }, // render with uncheck checkbox and translated value
-     *  { isChecked: true, text: 'translatin.key.2' }, // render with uncheck checkbox and translated value
-     * ]
-     * 
-     * @return a HTML string of checkbox and text for each object in textList
-     */
-    getCheckboxAndTextHTMLTemplate(textList, needTranslation) {
-        return textList.map((dcm) => {
-            const { isChecked, text } = dcm;
-            const textToRender = needTranslation ? `translated: ${text}` : text;
-            return (`<div style="display: flex;">
-            <div style="flex: 1">${isChecked}
-            </div>
-            <div style="flex: 10">
-            ${textToRender}
-            </div>
-            </div>`);
-        }).join('');
-    }
-
     /** 
      * replace value from the form and replace all in the templates
      * @param templates HTML file
-     * @param valueToReplace Object with field and value ex. { field: value }
+     * @param valueToReplace Object with field and value see example in ResultScreen.js
      * 
      * @return HTML template that replaced all placeholder with value
     */
