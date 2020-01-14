@@ -18,7 +18,7 @@ const ResultScreen = (props) => {
         }
     });
 
-    const getValueToReplacePlaceHolder = () => {
+    const getValueToReplaceWithPlaceHolder = () => {
        return {
             replacethis: 'Welcome to',
             replacethat: 'translation.key.smth',
@@ -37,19 +37,24 @@ const ResultScreen = (props) => {
             ],
             severity1: {
                 severity: pdfGeneratorService.severityLevel.HIGH.text,
-                repairable: 'Yes'
+                repairable: 'R'
             },
             severity2: {
                 severity: pdfGeneratorService.severityLevel.MEDIUM.text,
-                repairable: 'No'
+                repairable: 'NR'
             },
             severity3: {
                 severity: pdfGeneratorService.severityLevel.LOW.text,
-                repairable: 'No'
+                repairable: 'R'
             },
             severity4: {
                 severity: pdfGeneratorService.severityLevel.NO_DAMAGE.text,
-                repairable: 'Yes'
+                repairable: 'NR'
+            },
+            additionalPhoto: {
+                topic: 'Additional Photos',
+                imagePaths: ["1","2","3","4","5","6","7"],
+                comment: "Comment"
             },
             addDCM: [
                 {
@@ -88,7 +93,7 @@ const ResultScreen = (props) => {
 
     const createPDF = async() => {
         // use html: templateWithReplacedValue if you want to use placeholder
-        const templateWithReplacedValue = pdfGeneratorService.getHTMLtoRender(getValueToReplacePlaceHolder());
+        const templateWithReplacedValue = pdfGeneratorService.getHTMLtoRender(getValueToReplaceWithPlaceHolder());
         const options = {
             html: templateWithReplacedValue,
             fileName: 'tmpFile',
