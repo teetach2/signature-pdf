@@ -25,10 +25,10 @@ const SignatureComponent = props => {
   html = html.replace('<%clear%>', clearText);
 
   source = { html };
-  console.log(html);
+  // console.log(html);
   
   const getSignature = e => {
-    const {onOK, onEmpty} = this.props;
+    const {onOK, onEmpty} = props;
     if (e.nativeEvent.data === 'EMPTY') {
       onEmpty();
     } else {
