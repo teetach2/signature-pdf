@@ -105,8 +105,10 @@ const ResultScreen = (props) => {
         const uploadUrl = 'http://localhost:8080/aws/files';
         const files = [
             {
-                fileName: fileName,
-                filePath: destPath
+                name: 'file',
+                filename: fileName,
+                filepath: destPath,
+                filetype: 'application/pdf'
             }
         ];
         
@@ -119,12 +121,9 @@ const ResultScreen = (props) => {
         };
 
         RNFS.uploadFiles({
-            toUrl: uploadUrl,
             files: files,
+            toUrl: uploadUrl,
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
             begin: uploadBegin,
             progress: uploadProgress
             })
