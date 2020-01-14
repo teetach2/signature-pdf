@@ -158,10 +158,49 @@ const ResultScreen = (props) => {
         };
 
         const file = await RNHTMLtoPDF.convert(options);
-        const destPath = RNFS.DocumentDirectoryPath + '/signature/' + Math.random() + '.pdf';
+        const fileName = Math.random() + '.pdf';
+        const destPath = RNFS.DocumentDirectoryPath + '/signature/' + fileName;
         await RNFS.moveFile(file.filePath, destPath);
         setPdfSource({ uri: destPath });
         setShowPDF(true);
+
+        // Upload file
+        const uploadUrl = 'http://localhost:8080/aws/files';
+        const files = [
+            {
+                fileName: fileName,
+                filePath: destPath
+            }
+        ];
+        
+        const uploadBegin = (response) => {
+            console.log('UPLOAD HAS BEGUN! JobId: ' + response.jobId);
+        };
+        const uploadProgress = (response) => {
+            const percentage = Math.floor((response.totalBytesSent/response.totalBytesExpectedToSend) * 100);
+            console.log('UPLOAD PERCENTAGE: ' + percentage);
+        };
+
+        RNFS.uploadFiles({
+            toUrl: uploadUrl,
+            files: files,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            begin: uploadBegin,
+            progress: uploadProgress
+            })
+        .promise.then((response) => {
+            if (response.statusCode == 200) {
+                console.log('FILES UPLOADED!'); // response.statusCode, response.headers, response.body
+            } else {
+                console.log('SERVER ERROR', response);
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+
     }
 
     return (
