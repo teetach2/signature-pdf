@@ -12,7 +12,7 @@ const AppNavigator = createStackNavigator(
       Result: ResultScreen
     },
     {
-      initialRouteName: 'Signature',
+      initialRouteName: 'Result',
     }
 );
 
