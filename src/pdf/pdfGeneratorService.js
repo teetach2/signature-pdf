@@ -30,76 +30,7 @@ class pdfGeneratorService {
      * @return html template
      * **/
     getTemplate(templateType) {
-        if (templateType === 'DCM') {
-            return `<div>{{logo}}</div>
-            <div style="display: flex">
-                <div style="flex: 1">
-                    <div style="display: flex">
-                        <div style="flex: 1">
-                        Customer Name:
-                        </div>
-                        <div style="flex: 2">
-                        {{customerName}}
-                        </div>
-                    </div>
-                </div>
-                <div style="flex: 1">
-                    <div style="display: flex">
-                        <div style="flex: 1">
-                        Vehicle Type:
-                        </div>
-                        <div style="flex: 2">
-                        {{vehicle|translate}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <h1>PDF TEST</h1><div>{{replacethis}} {{replacethat|translate}}</div>
-            <hr>
-            <h1>Basic Disclaimer</h1>
-            <div>
-            {{basicDCM|checkboxAndText}}
-            <hr>
-            <h1>Additional Disclaimer</h1>
-            <div>
-            {{addDCM|checkboxAndText}}
-            </div>
-            <div>
-            {{damagePhotos|singleImage|translate}}
-            </div>
-            <div>
-                <h1>Severity</h1>
-                <div>1. severity: {{severity1|indicateServerity}}</div>
-                <div>2. severity: {{severity2|indicateServerity}}</div>
-                <div>3. severity: {{severity3|indicateServerity}}</div>
-                <div>4. severity: {{severity4|indicateServerity}}</div>
-                <div>5. severity: {{severity5|indicateServerity}}</div>
-            </div>
-            <div>
-            {{additionalPhoto|imageGrid}}
-            </div>
-            `;
-        } else if (templateType === 'withPhotos') {
-            return `<h1>PDF TEST11</h1>
-            <br>
-            <img src="file://${props.navigation.state.params.imagePath}" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABh0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC41ZYUyZQAAA5NJREFUWEfVl7tOG0EUhrdJHiB5gETJE3C1wUiAbUDiJiouBS096aBBlEDtmA4QJWkBwSsgUVJQoJACgQIWEtiyYsxkvuXMenbXXq9JiuSXjmTPmfn/45kzZ46d/worKytv+/r6UgMDA1+6uro20un0t8HBwT0+M6YtxRyZ/vegRT739PTktVCho6NDRVl3d3eht7c3pwP9JMtfj/n5+fepVOqrJq4GhWJYlbVwCF1rmJiYSCYSiR9BYr0LanZ2Vi0tLXljy8vL7hg+ey4GB1xCGw+ZTCaryco20cjIiNre3la3t7cKVKtVNT4+7trz87M7hm9ra0sNDw/7gtBcpWw2mxH6aBCtLd7Z2anW19dVqVRyRWwUi0XXgmBsbW3NXWsHMTk5mRCZ+uC87G3Xn9Xh4aHQhrG/v68ODg7kWxishcPiu1xcXHwncmFIwrmTiT5KHExPT6u5uTn5Vh9wGE4MDZHzg6umJ3jZzrZHgXMfHR1VU1NTMtIYcBne9vb2is6njyJbA/fcTCLh6p25DQLQhced2wyPj49qaGjICwItkX0B1UsniVdkyPZmqFQqELlBmFsQBTgNvy5WPxcWFt6IvONQXo1TB+JdtSiUy2W2UyWTSfdKNsPNzY3vVvT399dqA3XcOCgocVAoFFRbW5tr7EYczMzMeAGgKfKOo3/1hnFQ4Z6enmRJY+RyOY8sn8/LaGOwS3b1RFPkHYdXzTgwqlu9AmNwd3fnK7t8vr+/F28YDw8PamxszJuPoSny7hXcs526GkYGwPbbAWBUvkaoFwCaIu8/Ah6WOFm9ubkZCmJ3d1e8YcAJt5mLpsi/LgkB276zs+MFQpYfHx+LNwwqp9HxJaH+0vI1tHF0dOReR9ZTG05PT8VTw/X1tSeO+a4hhYhOxjh5UlvFyckJpO56fb7q4uJCPC+ILESANspM4D2PSsJGOD8/d0szHJy3QbAUoyWyNdDDaaf3GEVldRSurq7U6uqqOjs7kxHlchleXT1/6R36ILJ+tPocx0Hs5xi02pA0A2sDDcn3yIYESEtWMosw3nPOMQgKDBYEc+1tx3TiFXUx6haZaNBABoMgichkXjXAe0FDYjelXDXm2AmHIa7PPS308UADqXFpE2HkBq9asC23i4xtbHvsXx4E50XS0EbVI48ysp21Tc88DujhaKMoIPXEbGMO97zhVfsTUL0oodRxHpPgn1N8oQr3b8NxfgOgvsOjwyVIMgAAAABJRU5ErkJggg==" />
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">
-            <br>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMxGQRZEnqvF5ALRHZD80V8H4kP60YXfU6s_MydGu0Q8AWVLz4&s" alt="Girl in a jacket" width="300" height="300">`;
-        } else {
-            return 'No template';
-        }
+        return `<header><style>@media print{body,html{width:210mm;height:297mm}section{page-break-after:always}}@page{size:A4;margin:0}section:first-child{margin:0}section{margin:130px 0}body{padding:80px 100px;font-family:\"Trebuchet MS\",sans-serif}h1{text-align:center;margin:0;font-weight:700}h2{margin:0;font-weight:700;padding:10px 0 30px 0;text-transform:uppercase}.two-column{display:flex}.two-column div{width:50%}.field-and-value{display:flex;padding:10px 0}.field-and-value span:first-child{width:40%}.field-and-value span:nth-child(2){width:60%;word-break:break-all;padding-right:5px}.field-and-value, .one-line span:first-child{width:20%}.field-and-value, .one-line span:nth-child(2){width:80%;word-break:break-all}.one-line{width:100%}.separator{border-bottom:2px solid #333;margin:20px 0 10px 0}div span:nth-child(2){color:#007ab3}.signature-wrapper .header{font-weight:700}.signature-wrapper .signature{width:200px;height:150px;margin:10px 0}.signature-wrapper .name{color:#007ab3}</style></header><body> <section id=case-detail-wrapper style=margin:0><div id=file-header-wrapper><h1>VEHICLE CONDITION REPORT FORM</h1><div style=text-align:center;padding:20px;font-size:20px><span style=font-weight:700>Name des Produktes / Vertrages: </span><span>{{productName|defaultValue '-'}}</span></div><div style=display:flex;justify-content:space-between><div><span>Date: </span><span>{{pdfCreatedDate|defaultValue '-'}}</span></div><div><span>Auftragsnummer: </span><span>{{assignmentNumber|defaultValue '-'}}</span></div></div></div><div class=separator style=\"border-bottom:4px solid #333\"></div><div id=customerDetailsWrapper><h2>CUSTOMER DETAILS</h2><div id=customerDetails><div class=two-column><div class=field-and-value id=firstname><span>Vorname: </span><span>{{assignmentJobCustomerData.firstname|defaultValue '-'}}</span></div><div class=field-and-value id=lastname><span>Nachname: </span><span>{{assignmentJobCustomerData.lastname|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=email><span>Email: </span><span>{{assignmentJobCustomerData.email|defaultValue '-'}}</span></div><div class=field-and-value id=phoneNumber><span>Phone Number: </span><span>{{assignmentJobCustomerData.phoneNumber|defaultValue '-'}}</span></div></div><div class=\"field-and-value one-line\" id=eventLocation><span>Einsatzort: </span><span>{{assignmentJobCustomerData.breakdownAddress|defaultValue '-'}}</span></div><div class=\"field-and-value one-line\" id=destinationLocation><span>Destination Location: </span><span>{{assignmentJobCustomerData.repairShopAddress|defaultValue '-'}}</span></div></div></div><div class=separator></div><div id=vehicleDetailsWrapper><h2>VEHICLE DETAILS</h2><div id=vehicleDetails><div class=two-column><div class=field-and-value id=vehicleBrand><span>Fahrzeugmarke: </span><span>{{assignmentJobVehicleData.vehicleBrand|defaultValue '-'}}</span></div><div class=field-and-value id=vehicleModel><span>Fahrzeugmodell: </span><span>{{assignmentJobVehicleData.vehicleModel|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=vehicleColor><span>Farbe: </span><span>{{assignmentJobVehicleData.vehicleColor|defaultValue '-'|translate 'thirdparty'}}</span></div><div class=field-and-value id=vehicleLicensePlate><span>Kennzeichen: </span><span>{{assignmentJobVehicleData.vehicleLicensePlate|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=vehicleVin><span>Fahrgestellnummer (VIN): </span><span>{{assignmentJobVehicleData.vehicleVin|defaultValue '-'}}</span></div><div class=field-and-value id=vehicleMileage><span>KM-Stand Kundenfahrzeug: </span><span>{{assignmentJobVehicleData.vehicleMileage|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=vehicleFuelType><span>Fuel Type: </span><span>{{assignmentJobVehicleData.vehicleFuelType|defaultValue '-'|translate 'thirdparty'}}</span></div><div class=field-and-value id=vehicleFuelQuantity><span>Fuel Quantity: </span><span>{{assignmentJobVehicleData.vehicleFuelQuantity|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=vehicleWeight><span>Weight: </span><span>{{assignmentJobVehicleData.vehicleWeight|defaultValue '-'}}</span></div><div class=field-and-value id=vehicleType><span>Vehicle Category: </span><span>{{assignmentJobVehicleData.vehicleType|defaultValue '-'|translate}}</span></div></div><div class=\"field-and-value one-line\" id=vehiclePassengers><span>Anzahl Insassen: </span><span>{{assignmentJobVehicleData.vehiclePassengers|defaultValue '-'}}</span></div><div class=\"field-and-value one-line\" id=specialInstructions><span>Special Instructions: </span><span>{{assignmentJobVehicleData.specialInstructions|defaultValue '-'}}</span></div></div></div><div class=separator></div><div id=serviceProviderDetails><h2>SERVICE PROVIDER DETAILS</h2><div class=two-column><div class=field-and-value id=providerName><span>Name des Servicepartners: </span><span>{{serviceProviderData.providerName|defaultValue '-'}}</span></div><div class=field-and-value id=operativeName><span>Operative Name: </span><span>{{serviceProviderData.operativeName|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=timeReceived><span>Time Received: </span><span>{{serviceProviderData.timeReceived|defaultValue '-'}}</span></div><div class=field-and-value id=timeOnScene><span>Time on Scene: </span><span>{{serviceProviderData.timeOnScene|defaultValue '-'}}</span></div></div><div class=two-column><div class=field-and-value id=timeDepartScene><span>Time Depart Scene: </span><span>{{serviceProviderData.timeDepartScene|defaultValue '-'}}</span></div><div class=field-and-value id=timeDelivered><span>Time Delivered: </span><span>{{serviceProviderData.timeDelivered|defaultValue '-'}}</span></div></div><div id=problemDetails><div>Reported problem & details of work carried out:</div><div style=margin-top:10px;color:#007ab3>{{serviceProviderData.problemDetails|defaultValue '-'}}</div></div></div> </section> <section><div class=separator></div><h2>Vehicle Condition</h2><div style=width:fit-content;margin:auto;padding:0;margin-bottom:30px>{{vehicleCondition.vehicleImage|image}}</div><div style=width:fit-content;margin-left:auto;margin-right:0><div>{{vehicleCondition.repairable.acronym|translate}} – {{vehicleCondition.repairable.text|translate}}</div><div>{{vehicleCondition.nonRepairable.acronym|translate}} – {{vehicleCondition.nonRepairable.text|translate}}</div></div><div style=margin-top:50px;margin-bottom:50px>{{vehicleCondition.parts|damageParts}}</div><div class=separator></div><div><h2>INSPECTION CONDITION</h2><div style=margin-bottom:30px;color:#007ab3>{{inspectionCondition|multipleStringConcat ', '|defaultValue '-'|translate}}</div></div><div style=display:flex><div style=flex:1><h2>EXTERIOR CONDITION</h2><div class=field-and-value><span>Soiled: </span><span>{{exteriorCondition.soiled|defaultValue '-'|translate}}</span></div></div><div style=flex:1><h2>INTERIOR CONDITION</h2><div class=field-and-value><span>Front seat(s): </span><span>{{interiorCondition.frontSeat|multipleStringConcat ', '|defaultValue '-'|translate}}</span></div><div class=field-and-value><span>Rear seat(s): </span><span>{{interiorCondition.rearSeat|multipleStringConcat ', '|defaultValue '-'|translate}}</span></div><div class=field-and-value><span>Floor covering: </span><span>{{interiorCondition.rearSeat|multipleStringConcat ', '|defaultValue '-'|translate}}</span></div><div class=field-and-value><span>Headlining: </span><span>{{interiorCondition.rearSeat|multipleStringConcat ', '|defaultValue '-'|translate}}</span></div></div></div> </section>{{evidences}}{{forceEntry}} <section><div class=separator></div><h2>CUSTOMER ACKNOWLEDGEMENT & DISCLAIMERS</h2>{{disclaimers}}<div style=\"margin:50px 0\"><h3><span>Vehicle condition changed: </span><span style=font-weight:400>{{vehicleConditionChanged}}</span></h3></div><div class=signature-wrapper style=margin-top:20px><div class=header>Technician signature</div><div class=signature>{{signature.technicianSignature|image}}</div><div class=name>{{serviceProviderData.operativeName}}</div></div><div class=signature-wrapper style=margin-top:50px><div class=header>Repair shop technician signature</div><div class=signature>{{signature.repairshopSignature|image}}</div><div class=name>{{repairshopName}}</div></div><div class=signature-wrapper style=margin-top:50px><div class=header>Customer disclaimer & acknowledgement signature</div><div class=signature>{{signature.customerSignature|image}}</div><div class=name>{{assignmentJobCustomerData.firstname}} {{assignmentJobCustomerData.lastname}}</div></div> </section></body>`
     }
 
     /**
@@ -139,7 +70,7 @@ class pdfGeneratorService {
      * @param valueToReplace Object of field and value to replace in placeHolder ex. { field: value }
      * 
      * @return value of a placeholder (with or without translation)
-     */
+     */ 
     getTranslatedValue(keyToFind, valueToReplace) {
         if (!keyToFind.includes(this.pipes.TRANSLATE)) {
             return;
@@ -338,7 +269,7 @@ class pdfGeneratorService {
      * @return HTML that already replaced all placeholder with value
     */
    getHTMLtoRender(valueToReplacePlaceHolder) {
-        const template = this.getTemplate('DCM');
+        const template = this.getTemplate();
         const placeHolders = this.getPlaceHolders(template);
         return this.replaceValue(template, valueToReplacePlaceHolder, placeHolders);
     }
