@@ -20,75 +20,124 @@ const ResultScreen = (props) => {
 
     const getValueToReplaceWithPlaceHolder = () => {
        return {
-            replacethis: 'Welcome to',
-            replacethat: 'translation.key.smth',
-            vehicle: 'vehicle.type.car',
-            customerName: 'john doe',
-            damagePhotos: [
-                {
-                    topic: 'topic1',
-                    imagePath: 'path/to/img/1',
-                    comment: 'comment jaaaaaa'
-                },
-                {
-                    topic: 'topic2',
-                    imagePath: 'path/to/img/1'
-                }
-            ],
-            severity1: {
-                severity: pdfGeneratorService.severityLevel.HIGH.text,
-                repairable: 'R'
+
+        // section1
+        assignmentJobCustomerData: {     
+            firstname: 'firstname',    
+            lastname: 'lastname',    
+            email: 'email',    
+            phoneNumber: 'phoneNumber',
+            breakdownAddress:   'breakdownAddress',
+            repairShopAddress:  'repairShopAddress',  
+        },
+        assignmentJobVehicleData: {     
+            vehicleBrand:    'vehicleBrand',   
+            vehicleModel:    'vehicleModel',  
+            vehicleColor: 'some.key.to.translate.vehicleColor', // (translation key -> use ABS translation)     
+            vehicleLicensePlate:     'vehicleLicensePlate',
+            vehicleVin:     'vehicleVin',
+            vehicleMileage:     'vehicleMileage',
+            vehicleFuelType: 'some.key.to.translate.vehicleFuelType', //(translation key -> use ABS translation) 
+            vehicleFuelQuantity:   'vehicleFuelQuantity',  
+            vehicleWeight:     'vehicleWeight',
+            vehicleCategory: 'some.key.to.translate.vehicleCategory', //(translation key -> use our translation)     
+            vehiclePassengers:   'vehiclePassengers',
+            specialInstructions:  'specialInstructions',
+        },
+        serviceProviderData: {     
+            providerName:  'providerName',
+            operativeName:   'operativeName',  
+            timeReceived: 'timeReceived', //(covert to bu timezone, format: dd/MM/yyyy HH:mm)     
+            timeOnScene: 'timeOnScene', //(covert to bu timezone, format: dd/MM/yyyy HH:mm)     
+            timeDepartScene: 'timeDepartScene', //(covert to bu timezone, format: dd/MM/yyyy HH:mm)     
+            timeDelivered: 'timeDelivered', //(covert to bu timezone, format: dd/MM/yyyy HH:mm)     
+            problemDetails:   'problemDetails'
+        },
+
+        // section2
+        vehicleCondition: {
+            vehicleImage: 'imageSource',
+            repairable: {
+                acronym: 'some.key.to.translate.R', //(translation key -> use our translation)
+                text: 'some.key.to.translate.repairable',  //(translation key -> use our translation)
             },
-            severity2: {
-                severity: pdfGeneratorService.severityLevel.MEDIUM.text,
-                repairable: 'NR'
+            nonRepairable: {
+                acronym: 'some.key.to.translate.NR',
+                text: 'some.key.to.translate.nonRepairable'
             },
-            severity3: {
-                severity: pdfGeneratorService.severityLevel.LOW.text,
-                repairable: 'R'
-            },
-            severity4: {
-                severity: pdfGeneratorService.severityLevel.NO_DAMAGE.text,
-                repairable: 'NR'
-            },
-            additionalPhoto: {
-                topic: 'Additional Photos',
-                imagePaths: ["1","2","3","4","5","6","7"],
-                comment: "Comment"
-            },
-            addDCM: [
+            parts: [
                 {
-                    isChecked: false,
-                    text: 'additional.dcm.1'
-                },
-                {
-                    isChecked: true,
-                    text: 'additional.dcm.2'
-                },
-                {
-                    isChecked: false,
-                    text: 'additional.dcm.3'
-                }
-            ],
-            basicDCM: [
-                {
-                    isChecked: true,
-                    text: 'basic.dcm.1'
-                },
-                {
-                    isChecked: true,
-                    text: 'basic.dcm.2'
-                },
-                {
-                    isChecked: true,
-                    text: 'basic.dcm.3'
-                },
-                {
-                    isChecked: false,
-                    text: 'basic.dcm.4'
+                    text:  'some.key.to.translate.parts',  //(translation key -> use our translation),
+                    severity:  'some.key.to.translate.severity',  //(translation key -> use our translation)
+                    repairable:  'some.key.to.translate.repairable', // (translation key -> use our translation)
                 }
             ]
-       };
+        },
+        inspectionCondition: [ 'condition1', 'condition2' ],  // (translation key -> use our translation)
+        exteriorCondition: {       
+            soiled: 'some.key.to.translate.soiled', //(translation key -> use our translation)   
+        },
+        interiorCondition: {       
+            frontSeat: [ 'some.key.to.translate.condition1', 'some.key.to.translate.condition2' ],  // (translation key -> use our translation)       
+            rearSeat: [ 'some.key.to.translate.condition1', 'some.key.to.translate.condition2' ], // (translation key -> use our translation)       
+            floorCovering: [ 'some.key.to.translate.condition1', 'some.key.to.translate.condition2' ],  // (translation key -> use our translation)       
+            headlining:  [ 'some.key.to.translate.condition1', 'some.key.to.translate.condition2' ], // (translation key -> use our translation)   
+        },
+    
+    
+    
+    
+        // section3
+        evidences: {      
+            damagePart: [
+                {
+                    partName: 'some.key.to.translate.partName',  //(translation key -> use our translation)
+                    photos: [ 'imageSource' ],
+                    comment: 'comment'
+                }
+            ],
+            additionalPhotos: [ 'imageSource' ],
+            generalComment: 'generalComment'
+        },
+        
+    
+    
+    
+        // section4
+        forceEntry: [  // if forceEntry is not checked or no signature, dont show this page
+            {
+                isChecked: true,   
+                text: 'some.key.to.translate.forceEntry', //(translation key -> use our translation),         
+            },
+        ],
+        
+    
+        // section5
+        disclaimers:
+        {     
+            mandatory: [
+                {
+                    isChecked: true,               
+                    text: 'some.key.to.translate.mandatory1', //(translation key -> use our translation),         
+                },
+            ],
+            additional: [
+                {
+                    isChecked: true,               
+                    text: 'some.key.to.translate.additional1', //(translation key -> use our translation),         
+                }
+            ]
+        },
+      
+    
+        signature: {
+            technicianSignature: 'technicianSignature',// leave blank will be in other ticket 
+            customerSignature:   'customerSignature', // leave blank will be in other ticket   
+            repairshopSignature:  'repairshopSignature', // leave blank will be in other ticket   
+        },
+        repairshopName: 'repairshopName', // get from FE    
+        vehicleConditionChanged: true
+    };
    }
 
     const createPDF = async() => {
